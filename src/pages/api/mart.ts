@@ -1,4 +1,3 @@
-//US Audio Mart
 import { NextApiRequest, NextApiResponse } from 'next';
 import puppeteer from 'puppeteer';
 
