@@ -50,25 +50,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const listingsFromSearch = await page.evaluate(() =>
         {
             const listings: { title: string; link: string; price: string | null | undefined; site: string }[] = [];
-            const items = document.querySelectorAll('.srp-results.srp-list.clearfix');
+            const items = document.querySelectorAll('.s-item__info.clearfix');
 
 
             items.forEach(item =>
             {
-                const titleElement = item.querySelector('div.s-item__title span[role="heading"]');
+                const titleElement = item.querySelector('.s-item__title');
                 const priceElement = item.querySelector('div.s-item__detail span[class="s-item__price"] ');
-
+                const linkElement = item.querySelector('.s-item__link');
 
                 const title = titleElement ? titleElement.textContent?.trim() : '';
-                const link = titleElement ? `https://www.head-fi.org${titleElement.getAttribute('href')}` : '';
+                const link = linkElement ? linkElement.getAttribute('href') : '';
                 const price = priceElement ? priceElement.textContent?.trim() : null;
                 const site = 'ebay';
 
 
-                if (title && link)
-                {
-                    listings.push({ title, link, price, site });
+                if (title) {
+                    const normalizedTitle = title.toUpperCase();
+                    //For whatever reason the first 2 grabbed listings are SHOP ON EBAY and they are always $20.00. Nothing to do with the search query.
+                    if (!normalizedTitle.includes('SHOP ON EBAY')) {
+                        listings.push({ title, link, price, site });
+                    }
                 }
+                
             });
 
 
