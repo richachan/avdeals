@@ -69,18 +69,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const listingsFromSearch = await page.evaluate(() =>
              {
             const listings = [];
-            const items = document.querySelectorAll('.adverttable');
+            const items = document.querySelectorAll('.ad');
 
             items.forEach(item => {
-                const titleElement = item.querySelector('.left a');
+                const titleElement = item.querySelector('.ad a');
                 const priceElement = item.querySelector('.rightCell');
 
                 const title = titleElement ? titleElement.textContent?.trim() : '';
-                const link = titleElement ? `https://www.usaudiomart.com${titleElement.getAttribute('href')}` : '';
+                const link = titleElement ? titleElement.getAttribute('href') : '';
                 const price = priceElement ? priceElement.textContent?.trim() : null;
                 const site = 'usaudiomart';
 
-                listings.push({ title, link, price, site });
+                if(title) {
+                    const normalizedTitle = title.toUpperCase();
+                    if (!normalizedTitle.includes('SOLD')) {
+                        listings.push({ title, link, price, site });
+                    }
+                }
             });
             return listings;
             page.close();
