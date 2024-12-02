@@ -1,4 +1,4 @@
-Made by Richard Chan, Jun Chao Wu :()
+Made by Richard Chan, Jun Chao Wu :>
 
 AVFind
 A web app that users can use to find deals on used audio (headphones, IEMs, DACs, AMPs), anything you can find on HeadFi, AVexchange or eBay, by dynamically grabbing listings from marketplaces and forums based on user query.
