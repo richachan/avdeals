@@ -1,6 +1,6 @@
 Made by Richard Chan, Jun Chao Wu :>
 
-AVFind
+avdeals (audio video deals)
 A web app that users can use to find deals on used audio (headphones, IEMs, DACs, AMPs), anything you can find on HeadFi, AVexchange or eBay, by dynamically grabbing listings from marketplaces and forums based on user query.
 
 Built with React, TypeScript for the front end and uses Puppeteer for scraping.
