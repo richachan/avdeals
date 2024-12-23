@@ -34,8 +34,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try 
     {
         await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
+
         //no results
         const elementExists = await page.$$('.block-row'); 
+        if (elementExists.length === 0) {
+            console.log('No elements found with the selector ".block-row".');
             await browser.close();
             return res.status(200).json([]); 
         }
