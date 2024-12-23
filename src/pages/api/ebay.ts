@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try
     {
         await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
-        await page.waitForSelector('.srp-results.srp-list.clearfix', {timeout: 10000}); // Ensure the listings are loaded
+        await page.waitForSelector('.srp-results.srp-list.clearfix', {timeout: 9000}); // Ensure the listings are loaded
 
 
         // Grab all listing links and prices on the search results page
