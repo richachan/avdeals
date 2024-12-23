@@ -62,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const html = await page.content();
         console.log(html);
 
-        await page.waitForSelector('table.adverttable tbody tr.ad', {timeout: 5000}); // Ensure the listings are loaded
+        await page.waitForSelector('table.adverttable tbody tr.ad', {timeout: 10000}); // Ensure the listings are loaded
        
         //Grab all listing links and prices on the search results page
         const listingsFromSearch = await page.evaluate(() =>

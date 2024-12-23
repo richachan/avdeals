@@ -34,7 +34,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try 
     {
         await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
-        await page.waitForSelector('.block-row', {timeout: 5000}); //Ensure the listings are loaded
+        const elementExists = await page.$$('.block-row'); // Returns an array of matched elements
+        if (elementExists.length === 0) {
+            console.log('No elements found with the selector ".block-row".');
+            await browser.close();
+            return res.status(200).json([]); // Abort further processing
+        }
+        await page.waitForSelector('.block-row'); //Ensure the listings are loaded
 
         //Grab all listing links and prices on the search results page
         const listingsFromSearch = await page.evaluate(() =>
