@@ -68,7 +68,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 if (title) {
                     const normalizedTitle = title.toUpperCase();
                     //For whatever reason the first 2 grabbed listings are SHOP ON EBAY and they are always $20.00. Nothing to do with the search query.
-                    if (!normalizedTitle.includes('SHOP ON EBAY')) {
+                    if (!normalizedTitle.includes('SHOP ON EBAY') && !price?.includes('to')) 
+                    {
                         listings.push({ title, link, price, site });
                     }
                 }
