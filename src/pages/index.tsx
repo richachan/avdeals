@@ -92,6 +92,7 @@ export default function Home() {
             className="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none"
             placeholder="Search for deals..."
           />
+          
           <button
             type="submit"
             className="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600"
@@ -108,6 +109,11 @@ export default function Home() {
         <div className="bg-white shadow-md rounded-lg p-4 max-h-[500px] overflow-y-auto">
           {loading ? (
             <div className="flex justify-center items-center">
+                              <img
+                  src="/catdance.gif"
+                  alt="dance dance"
+                  className="w-48 mx-auto"
+                />
               <div className="loader animate-spin border-t-2 border-blue-500 rounded-full w-12 h-12"></div>
             </div>
           ) : listings.length > 0 ? (
@@ -139,11 +145,6 @@ export default function Home() {
                 <p className="text-gray-500 mb-4">
                   No listings found. Try a different query.
                 </p>
-                <img
-                  src="/catdance.gif"
-                  alt="dance dance"
-                  className="w-48 mx-auto"
-                />
               </div>
             )
           )}
