@@ -43,8 +43,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try
     {
         await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
-        await page.waitForSelector('.srp-results.srp-list.clearfix', {timeout: 9000}); // Ensure the listings are loaded
 
+        
+
+        await page.waitForSelector('.srp-results.srp-list.clearfix'); // Ensure the listings are loaded
+
+        const elementExists = await page.$$('.s-item__info.clearfix'); 
+        if (elementExists.length === 0) {
+            console.log('No elements found with the selector ".s-item__info.clearfix');
+            await browser.close();
+            return res.status(200).json([]); 
+        }
 
         // Grab all listing links and prices on the search results page
         const listingsFromSearch = await page.evaluate(() =>

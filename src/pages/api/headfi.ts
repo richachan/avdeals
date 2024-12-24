@@ -35,6 +35,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     {
         await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
 
+        await page.waitForSelector('.block-row'); //Ensure the listings are loaded
+
         //no results
         const elementExists = await page.$$('.block-row'); 
         if (elementExists.length === 0) {
@@ -42,7 +44,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             await browser.close();
             return res.status(200).json([]); 
         }
-        await page.waitForSelector('.block-row'); //Ensure the listings are loaded
 
         //Grab all listing links and prices on the search results page
         const listingsFromSearch = await page.evaluate(() =>
