@@ -59,9 +59,9 @@ export default function Home() {
       <div className="max-w-3xl mx-auto">
         {/* Title */}
         <h1 className="text-2xl font-bold mb-6 text-center">Deal Finder</h1>
-
+        
         {/* Search Bar */}
-        <div className="flex items-center mb-6">
+        <form onSubmit={handleSearch} className="flex items-center mb-6">
           <input
             type="text"
             value={query}
@@ -76,7 +76,7 @@ export default function Home() {
           >
             {loading ? 'Searching...' : 'Search'}
           </button>
-        </div>
+        </form>
 
         {/* Error Message */}
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
