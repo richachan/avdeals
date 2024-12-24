@@ -13,9 +13,17 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [randomGif, setRandomGif] = useState<string>(''); // State for the random GIF
 
   const scraperEndpoints = ['/api/headfi', '/api/ebay', '/api/mart'];
   const listingsPerPage = 9;
+
+  // Function to select a random GIF
+  const selectRandomGif = () => {
+    const gifs = ['/catdance.gif', '/catballdance.gif', '/jumping-gatito.gif'];
+    const randomIndex = Math.floor(Math.random() * gifs.length); // Random index (0-2)
+    setRandomGif(gifs[randomIndex]);
+  };
 
   const handleSearch = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -26,6 +34,7 @@ export default function Home() {
     }
 
     setLoading(true);
+    selectRandomGif(); // Select a random GIF before starting loading
     setError('');
     setListings([]);
     setCurrentPage(1);
@@ -92,7 +101,6 @@ export default function Home() {
             className="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none"
             placeholder="Search for deals..."
           />
-          
           <button
             type="submit"
             className="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600"
@@ -108,13 +116,13 @@ export default function Home() {
         {/* Listings Container */}
         <div className="bg-white shadow-md rounded-lg p-4 max-h-[500px] overflow-y-auto">
           {loading ? (
-            <div className="flex justify-center items-center">
-                              <img
-                  src="/catdance.gif"
-                  alt="dance dance"
-                  className="w-48 mx-auto"
-                />
-              <div className="loader animate-spin border-t-2 border-blue-500 rounded-full w-12 h-12"></div>
+            <div className="flex justify-center items-center flex-col">
+              {/* Display random GIF */}
+              <img
+                src={randomGif}
+                alt="the car..."
+                className="w-48 h-48 mb-4"
+              />
             </div>
           ) : listings.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
