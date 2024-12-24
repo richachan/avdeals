@@ -1,5 +1,5 @@
 import { useState } from 'react';
-//:3
+
 type Listing = {
   title: string;
   link: string;
@@ -12,10 +12,14 @@ export default function Home() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const scraperEndpoints = ['/api/headfi', '/api/ebay', '/api/mart'];
+  const listingsPerPage = 9;
 
-  const handleSearch = async () => {
+  const handleSearch = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+
     if (!query.trim()) {
       setError('Please enter a valid query.');
       return;
@@ -24,6 +28,7 @@ export default function Home() {
     setLoading(true);
     setError('');
     setListings([]);
+    setCurrentPage(1);
 
     try {
       const scraperPromises = scraperEndpoints.map((endpoint) =>
@@ -54,12 +59,30 @@ export default function Home() {
     }
   };
 
+  // Pagination logic
+  const indexOfLastListing = currentPage * listingsPerPage;
+  const indexOfFirstListing = indexOfLastListing - listingsPerPage;
+  const currentListings = listings.slice(
+    indexOfFirstListing,
+    indexOfLastListing
+  );
+
+  const totalPages = Math.ceil(listings.length / listingsPerPage);
+
+  const handlePageChange = (direction: 'next' | 'prev') => {
+    if (direction === 'next' && currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    } else if (direction === 'prev' && currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-3xl mx-auto">
         {/* Title */}
         <h1 className="text-2xl font-bold mb-6 text-center">Deal Finder</h1>
-        
+
         {/* Search Bar */}
         <form onSubmit={handleSearch} className="flex items-center mb-6">
           <input
@@ -70,7 +93,7 @@ export default function Home() {
             placeholder="Search for deals..."
           />
           <button
-            onClick={handleSearch}
+            type="submit"
             className="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600"
             disabled={loading}
           >
@@ -83,9 +106,13 @@ export default function Home() {
 
         {/* Listings Container */}
         <div className="bg-white shadow-md rounded-lg p-4 max-h-[500px] overflow-y-auto">
-          {listings.length > 0 ? (
+          {loading ? (
+            <div className="flex justify-center items-center">
+              <div className="loader animate-spin border-t-2 border-blue-500 rounded-full w-12 h-12"></div>
+            </div>
+          ) : listings.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {listings.map((listing, index) => (
+              {currentListings.map((listing, index) => (
                 <div
                   key={index}
                   className="bg-gray-200 border border-gray-300 shadow-sm p-4 rounded-md hover:shadow-md transition"
@@ -108,12 +135,50 @@ export default function Home() {
           ) : (
             !loading &&
             !error && (
-              <p className="text-center text-gray-500">
-                No listings found. Try a different query.
-              </p>
+              <div className="text-center">
+                <p className="text-gray-500 mb-4">
+                  No listings found. Try a different query.
+                </p>
+                <img
+                  src="/catdance.gif"
+                  alt="dance dance"
+                  className="w-48 mx-auto"
+                />
+              </div>
             )
           )}
         </div>
+
+        {/* Pagination */}
+        {listings.length > 0 && (
+          <div className="flex justify-between mt-4">
+            <button
+              onClick={() => handlePageChange('prev')}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 rounded-md ${
+                currentPage === 1
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Previous
+            </button>
+            <span className="text-gray-700">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => handlePageChange('next')}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded-md ${
+                currentPage === totalPages
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
