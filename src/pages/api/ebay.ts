@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // Check for no listings
         const elementExists = await page.$$('.srp-save-null-search'); 
-        if (elementExists) {
+        if (elementExists.length > 0) {
             console.log('Selector ".srp-save-null-search" was found. (eBay)');
             await browser.close();
             return res.status(200).json([]); 
