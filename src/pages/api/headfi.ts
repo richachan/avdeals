@@ -35,10 +35,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     {
         await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
 
-        //no results
+        // Check for no listings
         const elementExists = await page.$$('.block-row'); 
         if (elementExists.length === 0) {
-            console.log('No elements found with the selector ".block-row".');
+            console.log('No elements found with the selector ".block-row". (HeadFi)');
             await browser.close();
             return res.status(200).json([]); 
         }

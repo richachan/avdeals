@@ -20,7 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 {
     const { query } = req.query;
 
-
     // Ensure the query is valid
     if (typeof query !== 'string' || query.trim() === '')
     {
@@ -34,23 +33,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json(cache.get(query)); // Return cached result
     }
 
-
     const searchUrl = `https://www.ebay.com/sch/112529/i.html?_from=R40&_nkw=${encodeURIComponent(query)}&_sop=15&LH_BIN=1&_oac=1`;
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
-
 
     try
     {
         await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
 
-        
-
-        await page.waitForSelector('.srp-results.srp-list.clearfix'); // Ensure the listings are loaded
-
-        const elementExists = await page.$$('.s-item__info.clearfix'); 
-        if (elementExists.length === 0) {
-            console.log('No elements found with the selector ".s-item__info.clearfix');
+        // Check for no listings
+        const elementExists = await page.$$('.srp-save-null-search'); 
+        if (elementExists) {
+            console.log('Selector ".srp-save-null-search" was found. (eBay)');
             await browser.close();
             return res.status(200).json([]); 
         }

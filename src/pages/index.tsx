@@ -14,13 +14,14 @@ export default function Home() {
   const [error, setError] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [randomGif, setRandomGif] = useState<string>(''); // State for the random GIF
+  const [hasSearched, setHasSearched] = useState<boolean>(false); // Track if a search has been performed
 
   const scraperEndpoints = ['/api/headfi', '/api/ebay', '/api/mart'];
   const listingsPerPage = 9;
 
   // Function to select a random GIF
   const selectRandomGif = () => {
-    const gifs = ['/catdance.gif', '/catballdance.gif', '/jumping-gatito.gif'];
+    const gifs = ['/catdance.gif', '/catballbounce.gif', '/jumping-gatito.gif'];
     const randomIndex = Math.floor(Math.random() * gifs.length); // Random index (0-2)
     setRandomGif(gifs[randomIndex]);
   };
@@ -38,6 +39,7 @@ export default function Home() {
     setError('');
     setListings([]);
     setCurrentPage(1);
+    setHasSearched(true);
 
     try {
       const scraperPromises = scraperEndpoints.map((endpoint) =>
@@ -90,7 +92,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-3xl mx-auto">
         {/* Title */}
-        <h1 className="text-2xl font-bold mb-6 text-center">Deal Finder</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">AV Deals</h1>
 
         {/* Search Bar */}
         <form onSubmit={handleSearch} className="flex items-center mb-6">
@@ -99,7 +101,7 @@ export default function Home() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none"
-            placeholder="Search for deals..."
+            placeholder="Enter a query!"
           />
           <button
             type="submit"
@@ -147,8 +149,7 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            !loading &&
-            !error && (
+            hasSearched && (
               <div className="text-center">
                 <p className="text-gray-500 mb-4">
                   No listings found. Try a different query.

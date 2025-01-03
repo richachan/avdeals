@@ -61,10 +61,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         await page.goto(searchUrl, { waitUntil: 'domcontentloaded' });
         const html = await page.content();
 
-        //no results
+        // Check for no listings
         const elementExists = await page.$$('table.adverttable tbody tr.ad'); 
         if (elementExists.length === 0) {
-            console.log('No elements found with the selector "table.adverttable tbody tr.ad".');
+            console.log('No elements found with the selector "table.adverttable tbody tr.ad". (US Audio Mart)');
             await browser.close();
             return res.status(200).json([]); 
         }
