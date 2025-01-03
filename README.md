@@ -3,7 +3,6 @@ Made by Richard Chan, Jun Chao Wu :>
 avdeals (audio video deals)
 A web app that users can use to find deals on used audio (headphones, IEMs, DACs, AMPs), anything you can find on HeadFi, US Audio Mart, or eBay, by dynamically grabbing listings from marketplaces and forums based on user query.
 
-
 Built with React, TypeScript for the front end and uses Puppeteer for scraping.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
