@@ -52,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Grab all listing links and prices on the search results page
         const listingsFromSearch = await page.evaluate(() =>
         {
-            const listings: { title: string | null; link: string | null; price: string | null; site: string | null}[] = [];
+            const listings: { title: string; link: string; price: string; site: string }[] = [];
             const items = document.querySelectorAll('.s-item__info.clearfix');
 
 
@@ -64,14 +64,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 const title = titleElement ? titleElement.textContent?.trim() : '';
                 const link = linkElement ? linkElement.getAttribute('href') : '';
-                const price = priceElement ? priceElement.textContent?.trim() : '';
+                const price = priceElement ? priceElement.textContent?.trim() : null;
                 const site = 'ebay';
 
 
                 if (title) {
                     const normalizedTitle = title.toUpperCase();
                     //For whatever reason the first 2 grabbed listings are SHOP ON EBAY and they are always $20.00. Nothing to do with the search query.
-                    if (!normalizedTitle.includes('SHOP ON EBAY') && price && !price?.includes('to')) 
+                    if (!normalizedTitle.includes('SHOP ON EBAY') && !price?.includes('to')) 
                     {
                         listings.push({ title, link, price, site });
                     }

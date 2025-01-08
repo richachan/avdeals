@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         //Grab all listing links and prices on the search results page
         const listingsFromSearch = await page.evaluate(() =>
              {
-            const listings: { title: string | null; link: string | null; price: string | null | undefined; site: string | null}[] = [];
+            const listings = [];
             const items = document.querySelectorAll('.block-row');
 
             items.forEach(item => {
@@ -61,8 +61,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 const title = titleElement ? titleElement.textContent?.trim() : '';
                 const link = titleElement ? `https://www.head-fi.org${titleElement.getAttribute('href')}` : '';
-                const price = priceElement ? priceElement.textContent?.trim() : '';
-                const flair = flairElement ? flairElement.textContent?.trim() : '';
+                const price = priceElement ? priceElement.textContent?.trim() : null;
+                const flair = flairElement ? flairElement.textContent?.trim() : null;
                 const site = 'headfi';
 
                 if (title && link  && !flair?.toUpperCase().includes('TRADE') && !flair?.toUpperCase().includes('WANT TO BUY')) 
@@ -75,9 +75,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         //opens each listing page and checks if the listing is still available as that information is not available on the search results page
-        const processListing = async (listing: { title: string | null; link: string | null; price: string | null | undefined; site: string | null}) => {
+        const processListing = async (listing: { title: string; link: string; price: string; site: string}) => {
             try {
-                const { title: string | null; link: string | null; price: string | null | undefined; site: string | null} = listing;
+                const { link, title, price, site} = listing;
 
                 //Open the listing page and check if the title includes "SOLD" and other keywords
                 const listingPage = await browser.newPage();
