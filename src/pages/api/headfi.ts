@@ -61,8 +61,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 const title = titleElement ? titleElement.textContent?.trim() : '';
                 const link = titleElement ? `https://www.head-fi.org${titleElement.getAttribute('href')}` : '';
-                const price = priceElement ? priceElement.textContent?.trim() : null;
-                const flair = flairElement ? flairElement.textContent?.trim() : null;
+                const price = priceElement ? priceElement.textContent?.trim() : '';
+                const flair = flairElement ? flairElement.textContent?.trim() : '';
                 const site = 'headfi';
 
                 if (title && link  && !flair?.toUpperCase().includes('TRADE') && !flair?.toUpperCase().includes('WANT TO BUY')) 
