@@ -64,7 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 const title = titleElement ? titleElement.textContent?.trim() : '';
                 const link = linkElement ? linkElement.getAttribute('href') : '';
-                const price = priceElement ? priceElement.textContent?.trim() : null;
+                const price = priceElement ? priceElement.textContent?.trim() : '';
                 const site = 'ebay';
 
 
