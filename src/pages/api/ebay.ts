@@ -52,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // Grab all listing links and prices on the search results page
         const listingsFromSearch = await page.evaluate(() =>
         {
-            const listings: { title: string; link: string; price: string; site: string }[] = [];
+            const listings: { title: string | null; link: string | null; price: string | null; site: string | null}[] = [];
             const items = document.querySelectorAll('.s-item__info.clearfix');
 
 
