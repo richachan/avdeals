@@ -7,6 +7,15 @@ type Listing = {
   site: string;
 };
 
+// Declare the electronAPI type for TypeScript
+declare global {
+  interface Window {
+    electronAPI?: {
+      fetchApi: (endpoint: string, query: string) => Promise<any>;
+    };
+  }
+}
+
 export default function Home() {
   const [query, setQuery] = useState<string>('');
   const [listings, setListings] = useState<Listing[]>([]);
@@ -42,18 +51,31 @@ export default function Home() {
     setHasSearched(true);
 
     try {
-      const scraperPromises = scraperEndpoints.map((endpoint) =>
-        fetch(`${endpoint}?query=${encodeURIComponent(query)}`)
-          .then(async (response) => {
-            if (!response.ok) {
-              throw new Error(`Error from ${endpoint}`);
-            }
-            return response.json();
-          })
-          .catch(() => [])
-      );
+      let scraperResults;
+      
+      // Check if we're in Electron environment
+      if (window.electronAPI) {
+        // Use Electron API
+        const scraperPromises = scraperEndpoints.map((endpoint) =>
+          window.electronAPI!.fetchApi(endpoint, query)
+            .catch(() => [])
+        );
+        scraperResults = await Promise.all(scraperPromises);
+      } else {
+        // Use regular fetch for web
+        const scraperPromises = scraperEndpoints.map((endpoint) =>
+          fetch(`${endpoint}?query=${encodeURIComponent(query)}`)
+            .then(async (response) => {
+              if (!response.ok) {
+                throw new Error(`Error from ${endpoint}`);
+              }
+              return response.json();
+            })
+            .catch(() => [])
+        );
+        scraperResults = await Promise.all(scraperPromises);
+      }
 
-      const scraperResults = await Promise.all(scraperPromises);
       const combinedListings = scraperResults.flat();
 
       const sortedListings = combinedListings.sort((a, b) => {

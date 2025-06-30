@@ -2,6 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/api/mart": "pages/api/mart.js",
-  "/api/headfi": "pages/api/headfi.js"
+  "/api/ebay": "pages/api/ebay.js",
+  "/api/headfi": "pages/api/headfi.js",
+  "/api/mart": "pages/api/mart.js"
 }
